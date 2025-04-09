@@ -17,11 +17,9 @@ app.use(cors());
 app.use(express.json());
 
 // 📁 Servir archivos estáticos desde carpeta /public (HTML, CSS, JS)
-app.use(express.static(path.join(__dirname, "public")));
-
-// 🏠 Ruta raíz que muestra index.html
+app.use(express.static(path.join(__dirname, "..", "public")));
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+  res.sendFile(path.join(__dirname, "..", "public", "index.html"));
 });
 
 // 🔌 Conexión a MongoDB
