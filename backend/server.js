@@ -147,9 +147,11 @@ app.use((err, req, res, next) => {
 const Ticket = require("./models/Ticket");
 const fetch = require("node-fetch");
 
-app.post("/webhook", async (req, res) => {
+app.post("/webhook", express.raw({ type: 'application/json' }), async (req, res) => {
   try {
-    const { type, data } = req.body;
+    const jsonString = req.body.toString('utf8'); // Convertir buffer a string
+    const body = JSON.parse(jsonString);
+    const { type, data } = body;
 
     if (type === "payment") {
       const paymentId = data.id;
@@ -204,6 +206,7 @@ app.post("/webhook", async (req, res) => {
     res.sendStatus(500);
   }
 });
+
 
 // ✅ Ruta de login para administrador
 app.post('/login', (req, res) => {

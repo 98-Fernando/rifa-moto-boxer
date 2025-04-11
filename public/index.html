@@ -5,6 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Rifa 2025</title>
     <link rel="stylesheet" href="styles.css" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+    
+      h1, h2, h3, p, input, button {
+        max-width: 100%;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+      }
+    
+      form input, form button {
+        width: 100%;
+      }
+    
+      .grid-opciones {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+    
+      .btn-opcion {
+        flex: 1 1 45%;
+        min-width: 130px;
+      }
+    
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 1.2rem;
+        }
+    
+        .valor {
+          font-size: 1rem;
+        }
+    
+        .nota-sorteo {
+          font-size: 0.9rem;
+        }
+    
+        .relleno {
+          font-size: 0.9rem;
+        }
+    
+        input, button {
+          font-size: 1rem;
+          padding: 0.6rem;
+        }
+    
+        .redes-sociales img {
+          width: 32px;
+          height: 32px;
+        }
+      }
+    </style>
+    
   </head>
   <body>
     <div class="container">
