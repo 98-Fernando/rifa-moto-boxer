@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rifa 2025</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    * { box-sizing: border-box; }
+    h1, h2, h3, p, input, button { max-width: 100%; word-wrap: break-word; overflow-wrap: break-word; }
+    form input, form button { width: 70%; }
+    .grid-opciones { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .btn-opcion { flex: 1 1 45%; min-width: 130px; }
+    @media (max-width: 600px) {
+      h1 { font-size: 1.2rem; }
+      .valor { font-size: 1rem; }
+      .nota-sorteo { font-size: 0.9rem; }
+      .relleno { font-size: 0.9rem; }
+      input, button { font-size: 1rem; padding: 0.6rem; }
+    }
+    .redes-sociales img { width: 32px; height: 32px; }
+    .numero-btn { padding: 0.25rem 0.5rem; font-size: 0.75rem; line-height: 1rem; margin: 2px; border: 1px solid #ccc; border-radius: 4px; }
+    .numero-btn.disponible { background-color: #02f823c0; cursor: pointer; }
+    .numero-btn.seleccionado { background-color: #3b82f6; color: white; font-weight: bold; }
+    .numero-btn.ocupado { background-color: #ff0000; color: #ffffff; cursor: not-allowed; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>PARTICIPA EN LA GRAN RIFA <span class="premio-rojo animado">$1'500.000</span></h1>
+    <div class="progreso-container">
+      <div class="barra"><div id="progreso" class="relleno">0%</div></div>
+      <p id="porcentaje-texto">0% completado</p>
+      <p id="alerta80" style="display: none; color: red; font-weight: bold;">🔥 ¡Ya hemos alcanzado el 80%! El sorteo está cerca 🎉</p>
+      <h1 class="nota-sorteo">Nota: Se realiza el sorteo cuando se haya vendido el 80% de los boletos disponibles</h1>
+      <h1><span class="valor">VALOR: $ 5.000</span></h1>
+    </div>
+
+    <form id="formulario">
+      <input type="text" id="nombre" placeholder="Tu nombre" required />
+      <input type="email" id="correo" placeholder="Tu correo" required />
+      <input type="tel" id="telefono" placeholder="Tu número de celular" required pattern="[0-9]{10}" title="Debe tener 10 dígitos" />
+
+      <div id="seleccion-numeros" class="mt-4">
+        <p><strong>Selecciona tus números:</strong></p>
+        <div id="lista-numeros" class="grid grid-cols-10 gap-2 max-h-60 overflow-y-auto border rounded p-2 bg-white"></div>
+        <p id="limite-error" class="text-red-500 text-sm mt-1 hidden">⚠️ Este número ya fue tomado.</p>
+      </div>
+
+      <button type="submit">🎉 Participar</button>
+      <div id="spinner" class="hidden spinner">⏳ Enviando...</div>
+    </form>
+
+    <p id="mensaje" class="mensaje"></p>
+    <div id="ticket-box" class="ticket-box hidden"></div>
+
+    <div class="redes-sociales">
+      <h3>Síguenos en redes sociales</h3>
+      <div class="iconos">
+        <a href="https://wa.me/573216220062" target="_blank" title="WhatsApp"><img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp"></a>
+        <a href="https://facebook.com/tuusuario" target="_blank" title="Facebook"><img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook"></a>
+      </div>
+    </div>
+
+    <footer>
+      <a href="https://wa.me/573216220062" target="_blank">📱 ¿Tienes dudas? Escríbenos por WhatsApp</a>
+      <p style="margin-top: 10px; font-size: 14px; color: #555;">Responsable de la rifa: <strong>BRAYAN GÓMEZ</strong></p>
+    </footer>
+  </div>
+
+  <footer class="footer-fixed">&copy; 2025 Elaborado por Ing. Fernando Gómez - Popayán Cauca. Todos los derechos reservados.</footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script>emailjs.init('XPQs4d1K2sHKtcIDl');</script>
+
+  <script>
+    const TOTAL_NUMEROS = 999;
+    let seleccionados = [];
+
+    async function cargarNumerosDisponibles() {
+      try {
+        const res = await fetch("/api/tickets/numeros");
+        const data = await res.json();
+        if (!data.exito) return;
+
+        const cont = document.getElementById("lista-numeros");
+        cont.innerHTML = "";
+        seleccionados = [];
+
+        data.numeros.forEach(({ numero, disponible }) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.textContent = numero;
+          btn.className = "numero-btn";
+
+          if (disponible) {
+            btn.classList.add("disponible");
+            btn.addEventListener("click", () => {
+              if (btn.classList.contains("seleccionado")) {
+                btn.classList.remove("seleccionado");
+                seleccionados = seleccionados.filter(n => n !== numero);
+              } else {
+                btn.classList.remove("disponible");
+                btn.classList.add("seleccionado");
+                seleccionados.push(numero);
+              }
+            });
+          } else {
+            btn.disabled = true;
+            btn.classList.add("ocupado");
+          }
+
+          cont.appendChild(btn);
+        });
+      } catch (err) {
+        console.error("Error al cargar números:", err);
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("formulario");
+      const spinner = document.getElementById("spinner");
+      const msg = document.getElementById("mensaje");
+      const box = document.getElementById("ticket-box");
+
+      cargarNumerosDisponibles();
+
+      form.addEventListener("submit", async e => {
+        e.preventDefault();
+
+        const nombre = document.getElementById("nombre").value.trim();
+        const correo = document.getElementById("correo").value.trim();
+        const tel = document.getElementById("telefono").value.trim();
+
+        if (seleccionados.length === 0) {
+          msg.textContent = "❌ Selecciona al menos un número.";
+          return;
+        }
+
+        spinner.classList.remove("hidden");
+        msg.textContent = "";
+        box.classList.add("hidden");
+
+        try {
+          let res = await fetch("/api/tickets", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ nombre, correo, telefono: tel, numeros: seleccionados })
+          });
+          let data = await res.json();
+
+          if (!data.exito) throw new Error(data.mensaje);
+
+          msg.textContent = "✅ " + data.mensaje;
+          box.classList.remove("hidden");
+          box.innerHTML = `<p><strong>Tus números:</strong> ${data.numeros.join(", ")}</p>`;
+
+          cargarNumerosDisponibles();
+
+          res = await fetch("/api/crear-preferencia", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ cantidad: seleccionados.length })
+          });
+          const pago = await res.json();
+          if (pago.success && pago.init_point) {
+            window.location.href = pago.init_point;
+          } else {
+            alert("❌ No se pudo generar la preferencia de pago.");
+          }
+
+        } catch (err) {
+          console.error(err);
+          msg.textContent = "❌ " + err.message;
+        } finally {
+          spinner.classList.add("hidden");
+        }
+      });
+    });
+
+    async function actualizarProgreso() {
+      try {
+        const res = await fetch("/api/tickets/consulta");
+        const data = await res.json();
+        if (data.exito) {
+          const barra = document.getElementById("progreso");
+          const texto = document.getElementById("porcentaje-texto");
+          const alerta = document.getElementById("alerta80");
+
+          barra.style.width = `${data.porcentaje}%`;
+          barra.textContent = `${data.porcentaje}%`;
+          texto.textContent = `${data.porcentaje}% completado`;
+
+          alerta.style.display = data.porcentaje >= 80 ? "block" : "none";
+        }
+      } catch (err) {
+        console.error("Error al obtener progreso:", err);
+      }
+    }
+
+    actualizarProgreso();
+    setInterval(actualizarProgreso, 30000);
+  </script>
+</body>
+</html>
