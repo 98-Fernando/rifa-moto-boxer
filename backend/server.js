@@ -14,7 +14,7 @@ import { fileURLToPath } from "url";
 // Cargar variables de entorno
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-config({ path: path.join(__dirname, '.env') });
+config({ path: path.join(__dirname, '..', '.env') });
 
 // Crear la app de Express
 const app = express();
