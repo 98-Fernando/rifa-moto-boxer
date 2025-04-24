@@ -1,3 +1,6 @@
+/* styles.css */
+
+/* Global styles */
 body {
   background: url('/fondo.jpg') no-repeat center center fixed;
   background-size: cover;
@@ -7,25 +10,28 @@ body {
   padding: 40px 20px;
 }
 
+/* Container styling */
 .container {
   position: relative;
   z-index: 2;
 }
-
 .container::before {
   content: '';
   position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgb(255, 255, 255); /* ajuste del negro */
-  z-index: -20;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  z-index: -1;
 }
-
 .container:hover {
   transform: scale(1.01);
 }
 
-input, button {
+/* Inputs and buttons */
+input,
+button {
   display: block;
   margin: 12px auto;
   padding: 12px 16px;
@@ -35,7 +41,6 @@ input, button {
   border-radius: 8px;
   transition: all 0.3s ease;
 }
-
 input:focus {
   border-color: #2196f3;
   box-shadow: 0 0 5px rgba(33, 150, 243, 0.4);
@@ -48,7 +53,6 @@ button {
   font-weight: bold;
   border: none;
   cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
 }
 button:hover {
   background-color: #1976d2;
@@ -59,19 +63,47 @@ button:active {
   transform: scale(0.98);
 }
 
-.moto-img {
-  width: 100%;
-  border-radius: 12px;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  animation: float 3s ease-in-out infinite;
+/* Spinner */
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #2196f3;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  margin: 15px auto;
+  animation: spin 1s linear infinite;
 }
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-5px); }
-  100% { transform: translateY(0px); }
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
+/* Progress bar */
+.progreso-container {
+  margin: 25px 0 15px;
+}
+.barra {
+  width: 100%;
+  height: 24px;
+  background-color: #e0e0e0;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: inset 0 0 5px #aaa;
+  margin: 10px auto;
+}
+.relleno {
+  height: 100%;
+  background-color: #4caf50;
+  width: 0%;
+  transition: width 0.5s ease-in-out;
+  border-radius: 20px;
+  text-align: center;
+  color: white;
+  line-height: 24px;
+  font-weight: bold;
+}
+
+/* Ticket display */
 .ticket-box {
   margin-top: 25px;
   background: #fff9e6;
@@ -88,41 +120,7 @@ button:active {
   to { opacity: 1; transform: translateY(0); }
 }
 
-.hidden {
-  display: none;
-}
-
-a {
-  color: #2196f3;
-  text-decoration: none;
-  font-weight: 500;
-}
-a:hover {
-  text-decoration: underline;
-}
-
-.boletos-buttons {
-  margin-top: -5px;
-}
-.boletos-buttons p {
-  margin: 5px 0;
-  font-weight: bold;
-}
-.btn-opcion {
-  background-color: #ff0303;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 18px;
-  margin: 6px 6px 0;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background 0.3s ease;
-}
-.btn-opcion:hover {
-  background-color: #ef6c00;
-}
-
+/* Message styles */
 .mensaje {
   font-size: 16px;
   margin-top: 15px;
@@ -135,210 +133,24 @@ a:hover {
   color: #2e7d32;
   border-left: 5px solid #66bb6a;
   box-shadow: 0 4px 10px rgba(102, 187, 106, 0.2);
-  font-weight: bold;
-  font-size: 17px;
-  white-space: nowrap;
-  overflow: hidden;
-  width: fit-content;
-  margin: 20px auto;
-  padding: 10px 18px;
-  animation: typewriter 2s steps(40, end), blink-caret 0.75s step-end infinite;
-}
-@keyframes blink-caret {
-  from, to { border-right-color: transparent; }
-  50% { border-right: 2px solid #2e7d32; }
-}
-@keyframes typewriter {
-  from { width: 0; }
-  to { width: 100%; }
 }
 .mensaje.error {
   background: #ffebee;
   color: #c62828;
   border: 1px solid #ef5350;
-  font-weight: bold;
 }
 
-.animate {
-  animation: bounceIn 0.8s ease;
-}
-@keyframes bounceIn {
-  0% { transform: scale(0.9); opacity: 0.5; }
-  50% { transform: scale(1.05); opacity: 1; }
-  100% { transform: scale(1); }
-}
-
-.spinner {
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #2196f3;
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  margin: 15px auto;
-  animation: spin 1s linear infinite;
-}
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.progreso-container {
-  margin: 25px 0 15px;
-  text-align: center;
-}
-.barra {
-  width: 100%;
-  height: 24px;
-  background-color: #e0e0e0;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: inset 0 0 5px #aaa;
-  margin: 10px 0;
-}
-.relleno {
-  height: 100%;
-  background-color: #4caf50;
-  width: 0%;
-  transition: width 0.5s ease-in-out;
-  border-radius: 20px;
-  text-align: center;
-  color: white;
-  line-height: 24px;
-  font-weight: bold;
-}
-
-.numero-disponible {
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  padding: 8px;
-  margin: 5px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.numero-ocupado {
-  background-color: #f44336;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  padding: 8px;
-  margin: 5px;
-  cursor: not-allowed;
-  opacity: 0.7;
-}
-.numero-seleccionado {
-  background-color: #2196f3; /* Color azul */
-  color: white;
-  border: none;
-  border-radius: 6px;
-  padding: 8px;
-  margin: 5px;
-  cursor: not-allowed;
-  opacity: 1;
-}
-
-.numeros-grid {
+/* Number buttons grid */
+#lista-numeros {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
   gap: 8px;
-  margin-top: 20px;
-}
-
-.pdf-box {
-  margin-top: 30px;
-  background: #e3f2fd;
-  padding: 15px;
-  border-left: 5px solid #2196f3;
-  border-radius: 8px;
-  color: #0d47a1;
-  font-weight: bold;
-}
-
-@media screen and (max-width: 480px) {
-  body {
-    padding: 20px 10px;
-  }
-
-  input, button {
-    width: 95%;
-    font-size: 15px;
-    padding: 10px 14px;
-  }
-
-  .boletos-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 8px;
-  }
-
-  .btn-opcion {
-    width: 100%;
-    max-width: 120px;
-    font-size: 14px;
-    padding: 10px 12px;
-  }
-
-  .mensaje.exito {
-    font-size: 16px;
-    padding: 8px 12px;
-    white-space: normal;
-  }
-
-  #porcentaje-texto {
-    font-size: 14px;
-  }
-
-  .barra {
-    height: 20px;
-  }
-
-  .relleno {
-    font-size: 13px;
-  }
-
-  footer a {
-    font-size: 14px;
-    display: inline-block;
-    margin-top: 20px;
-  }
-}
-
-.redes-sociales {
-  margin-top: 30px;
-  text-align: center;
-}
-.redes-sociales h3 {
-  font-size: 17px;
-  margin-bottom: 10px;
-  color: #333;
-}
-.redes-sociales .iconos a {
-  margin: 0 8px;
-  display: inline-block;
-}
-.redes-sociales .iconos img {
-  width: 28px;
-  height: 28px;
-  transition: transform 0.3s ease;
-}
-.redes-sociales .iconos img:hover {
-  transform: scale(1.15);
-}
-
-.grid-opciones {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  margin-top: 10px;
-  justify-items: center;
-}
-.grid-opciones .btn-opcion {
-  width: 100%;
-  max-width: 160px;
-  font-size: 15px;
+  max-height: 15rem;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+  background: #fff;
+  border-radius: 0.25rem;
 }
 .numero-btn {
   background-color: #4caf50;
@@ -346,71 +158,55 @@ a:hover {
   border: none;
   border-radius: 6px;
   padding: 8px;
-  margin: 5px;
   cursor: pointer;
   font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex: 0 0 auto;
 }
-
-.numero-btn:hover {
+.numero-btn.disponible:hover {
   background-color: #45a049;
 }
-
-
-#lista-numeros {
-  display: grid;
-  grid-template-columns: repeat(10, minmax(0, 1fr));
-  gap: 0.5rem; /* igual que gap-2 */
-  max-height: 15rem; /* igual que max-h-60 */
-  overflow-y: auto;
-  border: 1px solid #ddd;
-  padding: 0.5rem;
-  background: #fff;
-  border-radius: 0.25rem;
+.numero-btn.ocupado {
+  background-color: #f44336;
+  opacity: 0.7;
+  cursor: not-allowed;
 }
+.numero-btn.seleccionado {
+  background-color: #2196f3;
+}
+
+/* Premio rojo animation */
 .premio-rojo {
   color: red;
   font-size: 2.8em;
   font-weight: bold;
   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-}
-
-.premio-rojo-animado {
-  color: #ff0000;
-  font-size: 3em;
-  font-weight: bold;
-  text-shadow: 0 0 10px #ff0000, 0 0 20px #ff4d4d, 0 0 30px #ff8080;
-  animation: latido 1.5s infinite, brillar 2s infinite alternate, rebotar 2.5s infinite ease-in-out;
   display: inline-block;
+  animation: latido 1.5s infinite;
 }
-
 @keyframes latido {
-  0% { transform: scale(1); }
+  0%, 100% { transform: scale(1); }
   20% { transform: scale(1.15); }
   40% { transform: scale(0.95); }
   60% { transform: scale(1.1); }
   80% { transform: scale(0.98); }
-  100% { transform: scale(1); }
 }
 
-@keyframes brillar {
-  0% { text-shadow: 0 0 10px #ff0000; }
-  100% { text-shadow: 0 0 30px #ff8080; }
+/* Responsive tweaks */
+@media screen and (max-width: 480px) {
+  body { padding: 20px 10px; }
+  input, button { width: 95%; font-size: 15px; padding: 10px 14px; }
+  .mensaje.exito { font-size: 16px; padding: 8px 12px; }
+  .barra { height: 20px; }
+  .relleno { font-size: 13px; }
+  footer a { font-size: 14px; margin-top: 20px; display: inline-block; }
 }
 
-@keyframes rebotar {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-.nota-sorteo {
-  font-size: 20px;
-  font-weight: normal;
-  color: #444; 
-}
-.valor {
-  font-size: 40px;
-  font-weight: bold; 
-  color: #ff0303; 
-}
+/* Footer */
 .footer-fixed {
   position: fixed;
   bottom: 0;
