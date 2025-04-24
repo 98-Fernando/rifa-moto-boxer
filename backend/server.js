@@ -91,18 +91,21 @@ app.use('/api/tickets', ticketRoutes);
 // Crear preferencia de pago con Mercado Pago
 import mercadopago from 'mercadopago';
 
-// Configura tu cliente con el access token
-mercadopago.configure({ access_token: process.env.MP_ACCESS_TOKEN });
-
-// Desestructuración de Preference del objeto importado
-const { Preference } = mercadopago;
+mercadopago.configure({
+  access_token: process.env.MP_ACCESS_TOKEN
+});
 
 app.post('/api/crear-preferencia', async (req, res) => {
   try {
     const { cantidad } = req.body;
     const unitPrice = Number(process.env.PRECIO_BOLETO) || 4500;
-    const preference = await new Preference().create({
-      items: [{ title: 'Boletos de rifa', quantity: cantidad, unit_price: unitPrice }],
+
+    const preference = await mercadopago.preferences.create({
+      items: [{
+        title: 'Boletos de rifa',
+        quantity: cantidad,
+        unit_price: unitPrice
+      }],
       back_urls: {
         success: process.env.URL_SUCCESS,
         failure: process.env.URL_FAILURE,
@@ -110,7 +113,9 @@ app.post('/api/crear-preferencia', async (req, res) => {
       },
       auto_return: 'approved'
     });
-    res.status(200).json({ success: true, init_point: preference.init_point });
+
+    res.status(200).json({ success: true, init_point: preference.body.init_point });
+
   } catch (error) {
     console.error('❌ Error al crear preferencia de Mercado Pago:', error);
     res.status(500).json({ success: false, message: 'Error al crear preferencia' });
